@@ -91,10 +91,6 @@ python quick_cobi.py
 
 This script was created to simplify ICOBI analysis from LOBSTER outputs, focusing on flexibility and ease of use.
 
-## 📝 License
-
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more information.
-
 ## 🙌 Acknowledgements
 
 - [LOBSTER](https://www.lobster-calculation.com/) for chemical bonding analysis in solids
