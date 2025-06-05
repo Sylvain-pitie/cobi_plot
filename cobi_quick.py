@@ -82,31 +82,60 @@ def quick_icobi(emin, emax, atom1, atom2, min_dist=0.0, max_dist=None, radius=No
                 sites_atom1.append(i + 1)  # LOBSTER uses 1-based indexing
 
         print(f"{atom1} sites: {sites_atom1}")
+        sites_atom2 = []
+        for i, site in enumerate(structure.sites):
+            if str(site.specie) == atom2:
+                sites_atom2.append(i + 1)  # LOBSTER uses 1-based indexing
+
+        print(f"{atom2} sites: {sites_atom2}")
 
         # Collect all bonds
         all_labels = []
         all_values = []
         seen_labels = set()  # To avoid duplicates
-
+########################################################################"
         for site_idx in sites_atom1:
             site_bonds = icohpcollection.get_icohp_dict_of_site(
-                site=site_idx,
-                minbondlength=min_dist,
-                maxbondlength=max_dist
+                site=int((site_idx-1)),
+                minbondlength=float(min_dist),
+                maxbondlength=float(max_dist)
             )
+
 
             for label, icohp_obj in site_bonds.items():
                 if label in seen_labels:
                     continue  # Skip duplicates
 
                 bond_info = str(icohp_obj)
-                # Check if the bond involves atom2
-                if atom2 in bond_info:
+                # Check if the bond involves atom1 and atom2
+                if str(atom1) in bond_info and str(atom2) in bond_info:
                     icobi_value = icohpcollection.get_icohp_by_label(label)
                     all_labels.append(label)
                     all_values.append(icobi_value)
                     seen_labels.add(label)
                     print(f"  Bond {label}: ICOBI = {icobi_value:.6f}")
+##########################################################################
+        for site_idx in sites_atom2:
+            site_bonds = icohpcollection.get_icohp_dict_of_site(
+                site=int(site_idx-1),
+                minbondlength=float(min_dist),
+                maxbondlength=float(max_dist)
+            )
+
+
+            for label, icohp_obj in site_bonds.items():
+                if label in seen_labels:
+                    continue  # Skip duplicates
+
+                bond_info = str(icohp_obj)
+                # Check if the bond involves atom1 and atom2
+                if str(atom1) in bond_info and str(atom2) in bond_info:
+                    icobi_value = icohpcollection.get_icohp_by_label(label)
+                    all_labels.append(label)
+                    all_values.append(icobi_value)
+                    seen_labels.add(label)
+                    print(f"  Bond {label}: ICOBI = {icobi_value:.6f}")
+        
 
         if not all_values:
             print(f"❌ No {atom1}-{atom2} bonds found between {min_dist:.2f} and {max_dist:.2f} Å")
@@ -316,4 +345,3 @@ def interactive_mode(plot=False):
 
 if __name__ == "__main__":
     main()
-
